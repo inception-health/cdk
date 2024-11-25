@@ -1,0 +1,16 @@
+{
+  "name": "@inception-health/cdk-tsconfig",
+  "version": "0.0.1",
+  "license": "MIT",
+  "main": "index.js",
+  "files": [
+    "base.json",
+    "node18.json",
+    "node20.json"
+  ],
+  "repository": "git@github.com:inception-health/cdk.git",
+  "publishConfig": {
+    "access": "restricted",
+    "registry": "https://npm.pkg.github.com/inception-health/"
+  }
+}
