@@ -1,0 +1,60 @@
+{
+  "filter": ".",
+  "indent": "  ",
+  "dependencyTypes": ["dev", "prod", "resolutions"],
+  "semverGroups": [
+    {
+      "label": "use exact version numbers in production",
+      "packages": ["**"],
+      "dependencyTypes": ["prod"],
+      "dependencies": ["**"],
+      "range": ""
+    },
+    {
+      "label": "use exact version numbers for development",
+      "packages": ["**"],
+      "dependencyTypes": ["dev"],
+      "dependencies": ["**"],
+      "range": ""
+    },
+    {
+      "label": "use exact version numbers for resolutions",
+      "packages": ["**"],
+      "dependencyTypes": ["resolutions"],
+      "dependencies": ["**"],
+      "range": ""
+    }
+  ],
+  "semverRange": "",
+  "sortAz": [
+    "contributors",
+    "dependencies",
+    "devDependencies",
+    "keywords",
+    "peerDependencies",
+    "resolutions",
+    "scripts"
+  ],
+  "sortFirst": [
+    "name",
+    "description",
+    "version",
+    "license",
+    "private",
+    "author",
+    "keywords",
+    "main",
+    "module",
+    "types",
+    "exports",
+    "files",
+    "scripts",
+    "peerDependencies",
+    "dependencies",
+    "devDependencies",
+    "engines",
+    "repository"
+  ],
+  "source": [],
+  "versionGroups": []
+}
