@@ -8,9 +8,5 @@
     "node18.json",
     "node20.json"
   ],
-  "repository": "git@github.com:inception-health/cdk.git",
-  "publishConfig": {
-    "access": "restricted",
-    "registry": "https://npm.pkg.github.com/inception-health/"
-  }
+  "repository": "git@github.com:inception-health/cdk.git"
 }
