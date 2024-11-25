@@ -1,0 +1,12 @@
+{
+  "extends": "@inception-health/cdk-tsconfig/node20.json",
+  "compilerOptions": {
+    "paths": {
+      "*": [
+        "./node_modules/@types/",
+      ]
+    }
+  },
+  "include": ["."],
+  "exclude": ["dist", "build", "node_modules"]
+}
