@@ -1,0 +1,36 @@
+{
+  "name": "@inception-health/cdk",
+  "author": {
+    "name": "Melek Somai",
+    "email": "melek.somai@froedtert.com"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "ci:install": "pnpm install --no-frozen-lockfile",
+    "ci:publish": "pnpm build && pnpm recursive publish --filter '@inception-health/*' --no-git-checks && pnpm changeset tag",
+    "ci:update": "pnpm --recursive update",
+    "ci:version": "pnpm changeset version",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "dev": "turbo run dev --no-cache --parallel --continue",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
+    "syncpack:fix": "npx syncpack fix-mismatches && npx syncpack set-semver-ranges && npx syncpack format",
+    "test": "turbo run test",
+    "test:u": "turbo run test:u"
+  },
+  "devDependencies": {
+    "@changesets/changelog-github": "0.5.0",
+    "@changesets/cli": "2.27.1",
+    "@inception-health/cdk-tsconfig": "workspace:*",
+    "eslint": "8.56.0",
+    "eslint-config-cdk-inception": "workspace:*",
+    "prettier": "3.2.5",
+    "syncpack": "12.3.0",
+    "turbo": "1.12.4"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "repository": "inception-health/cdk.git"
+}

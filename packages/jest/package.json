@@ -1,0 +1,23 @@
+{
+  "name": "@inception-health/cdk-jest",
+  "version": "0.0.1",
+  "license": "MIT",
+  "main": "jest.config.js",
+  "peerDependencies": {
+    "@types/jest": "29.x.x",
+    "jest": "29.x.x",
+    "ts-jest": "29.x.x"
+  },
+  "devDependencies": {
+    "@inception-health/cdk-tsconfig": "workspace:*",
+    "@types/jest": "29.5.12",
+    "@types/node": "20.11.19",
+    "esbuild": "0.20.0",
+    "esbuild-jest": "0.5.0",
+    "eslint-config-cdk-inception": "workspace:*",
+    "jest": "29.7.0",
+    "ts-jest": "29.1.2",
+    "typescript": "5.3.3"
+  },
+  "repository": "git@github.com:inception-health/cdk.git"
+}
