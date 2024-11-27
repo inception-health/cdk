@@ -1,0 +1,99 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  build:
+    name: Build and Test
+    timeout-minutes: 15
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        node-version: [16.x, 20.x, 22.x]
+
+    steps:
+      - name: check out code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 7.1.2
+
+      - name: setup node.js environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+
+      - name: install dependencies
+        run: pnpm ci:install
+
+      - name: build
+        run: pnpm build
+
+      - name: testing
+        run: pnpm test
+  
+  linting:
+    name: Linting
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: check out code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 7.1.2
+
+      - name: setup node.js environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20
+          cache: "pnpm"
+
+      - name: install dependencies
+        run: pnpm ci:install
+
+      - name: linting
+        run: pnpm lint
+
+  coverage:
+    name: Coverage
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: check out code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 7.1.2
+
+      - name: setup node.js environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          cache: "pnpm"
+
+      - name: install dependencies
+        run: pnpm ci:install
+      
+      - name: build
+        run: pnpm build
+
+      - name: testing
+        run: pnpm test
