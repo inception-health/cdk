@@ -1,7 +1,5 @@
 # Inception Health CDK Constructs
 
-![Maintainer](https://img.shields.io/badge/maintainer-Inception Health-blue)
-
 ## Getting started
 
 To start using this repository, run the following command:
