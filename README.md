@@ -1,30 +1,33 @@
 # Inception Health CDK Constructs
 
-Inception Health provides a set of opinionated AWS CDK constructs to help you build secure, compliant, and scalable applications on AWS. These constructs are designed with HIPAA compliance and security best practices in mind, allowing you to focus on your application logic while we handle the infrastructure.
+Welcome to Inception Health CDK Constructs, a collection of opinionated AWS CDK constructs designed to help you build secure, compliant, and scalable applications on AWS with ease.
 
-Inception Health has identified CDK as a way to distribute our opinionated mechanisms for leveraging AWS resources in the "right" ways.
+With a focus on **HIPAA compliance** and **security best practices**, this library enables developers to streamline infrastructure management, allowing teams to focus on building impactful applications without worrying about complex cloud configurations.
 
-## Key Features
+## Why Inception Health CDK Constructs?
 
-* Tied deeply into AWS using native tools.
-* Built with HIPAA Compliance and Security in mind.
-* Typescript infrastructure as code.
-* Opinionated constructs allow teams to focus on their product and not AWS APIs.
+At [Inception Health](https://inceptionhealth.io), we recognize the challenges of securely building and scaling healthcare applications on the cloud. Our AWS CDK constructs encapsulate the expertise and lessons learned from building healthcare solutions, ensuring that security, compliance, and scalability are baked into every application from the start.
 
-## CDK Constructs
+### Key Features
+
+  - AWS Native: Deep integration with AWS services and native tools.
+  - HIPAA Compliance: Built with healthcare and regulatory standards in mind.
+  - TypeScript-Based: Infrastructure-as-Code with a developer-friendly language.
+  - Opinionated Design: Simplifies AWS APIs, allowing teams to focus on product development.
+
+## Constructs
 
 ### SecureBucket
 
-The `@inception-health/cdk-secure-bucket` package provides a construct that extends an S3 bucket. This construct handles security best practices and is required if you're storing PII/PHI.
+The `@inception-health/cdk-secure-bucket` package provides an enhanced S3 bucket construct with security best practices built-in. It is tailored for storing sensitive information, such as PII or PHI, and adheres to strict compliance requirements.
 
 ### SecureStore
 
-The `@inception-health/cdk-secure-store` package provides a construct that creates a secure DynamoDB table conformant to Inception Health HIPAA compliance and policies. It includes features such as encryption, high availability, disaster recovery, and monitoring.
+The `@inception-health/cdk-secure-store` package offers a secure, scalable DynamoDB table construct. Features include encryption at rest, high availability, disaster recovery, and monitoring, making it an ideal solution for HIPAA-compliant data storage.
 
 ### Lambda
 
-The `@inception-health/cdk-lambda` package provides a custom AWS Lambda construct for the AWS Cloud Development Kit (CDK). This construct simplifies the creation and management of AWS Lambda functions with advanced logging, monitoring, and dead letter queue (DLQ) support.
-
+The `@inception-health/cdk-lambda` package simplifies AWS Lambda management by providing enhanced constructs with features like advanced logging, monitoring, and dead letter queue (DLQ) support.
 
 ## Getting started
 
@@ -57,15 +60,27 @@ In that sense, AWS CDK is a framework that wraps CF and more importantly exposes
 
 ## Tools and Structure
 
-This monorepo is based on the following tools and technologies:
+This repository leverages modern tools and best practices to deliver a seamless developer experience:
 
 - [TypeScript](https://www.typescriptlang.org/) for the programming language.
 - [AWS CDK](https://aws.amazon.com/cdk/) for the infrastructure as Code constructs.
 - [pnpm](https://pnpm.js.org/) for the package management system.
 - [turborepo](https://turborepo.org/) a high-performance build system for JavaScript and TypeScript codebases.
-- [codecov](https://codecov.io/) for code coverage reporting.
 - [eslint](https://eslint.org/) for code quality and linting.
 - [prettier](https://prettier.io/) for code formatting.
 - [changeset](https://github.com/changesets/changesets) to manage versioning and changelogs with a focus on monorepos.
 - [jest](https://jestjs.io/) a delightful JavaScript Testing Framework with a focus on simplicity.
 
+## Contributing
+
+We welcome contributions! If you’d like to contribute, please follow our [CONTRIBUTING.md](CODE_OF_CONDUCT.md) guidelines for details on setting up your development environment, submitting pull requests, and our code of conduct.
+
+## License
+
+This repository is open-source and available under the [MIT License](LICENSE.md). See the LICENSE file for more details.
+
+## Questions or Feedback?
+
+If you have questions, feedback, or ideas to improve this library, feel free to open an issue.
+
+Happy coding with Inception Health CDK Constructs! 🚀
