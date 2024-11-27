@@ -1,0 +1,42 @@
+{
+  "name": "@inception-health/cdk-secure-bucket",
+  "version": "0.0.1",
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**"
+  ],
+  "scripts": {
+    "build": "tsup lib/index.ts --format esm,cjs --dts",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
+    "dev": "tsup lib/index.ts --format esm,cjs --watch --dts",
+    "lint": "TIMING=1 eslint 'lib/**/*.{js,ts}'",
+    "lint:fix": "TIMING=1 eslint 'lib/**/*.{js,ts}' --fix",
+    "test": "jest --coverage",
+    "test:u": "jest --coverage -u"
+  },
+  "peerDependencies": {
+    "aws-cdk": "2.x.x",
+    "aws-cdk-lib": "2.x.x",
+    "constructs": "10.x.x"
+  },
+  "devDependencies": {
+    "@inception-health/cdk-jest": "workspace:*",
+    "@inception-health/cdk-tsconfig": "workspace:*",
+    "@types/jest": "29.5.12",
+    "@types/node": "20.11.19",
+    "aws-cdk": "2.128.0",
+    "aws-cdk-lib": "2.128.0",
+    "constructs": "10.3.0",
+    "eslint": "8.56.0",
+    "eslint-config-cdk-inception": "workspace:*",
+    "jest": "29.7.0",
+    "ts-jest": "29.1.2",
+    "tsup": "8.0.2",
+    "typescript": "5.3.3"
+  },
+  "repository": "git@github.com:inception-health/cdk.git",
+  "sideEffects": false
+}
