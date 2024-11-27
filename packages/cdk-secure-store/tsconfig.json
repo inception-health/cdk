@@ -1,0 +1,5 @@
+{
+  "extends": "@inception-health/cdk-tsconfig/node20.json",
+  "include": ["."],
+  "exclude": ["dist", "build", "node_modules"]
+}

@@ -1,0 +1,119 @@
+{
+    "eventVersion": "1.08",
+    "userIdentity": {
+        "type": "AssumedRole",
+        "principalId": "ABCDEFGH:melek.somai@froedtert.com",
+        "arn": "arn:aws:sts::1234567890:assumed-role/AWS_ACCESS_ADMIN_1234566789/melek.somai@froedtert.com",
+        "accountId": "1234567890",
+        "accessKeyId": "ABCDEFGHIJKLMNOPQRST",
+        "sessionContext": {
+            "sessionIssuer": {
+                "type": "Role",
+                "principalId": "DEFCGHIJ",
+                "arn": "arn:aws:iam::1234567890:role/aws-reserved/sso.amazonaws.com/AWS_ACCESS_ADMIN_1234566789",
+                "accountId": "1234567890",
+                "userName": "AWS_ACCESS_ADMIN_1234566789"
+            },
+            "attributes": {
+                "creationDate": "2024-01-01T18:00:00Z"
+            }
+        }
+    },
+    "eventTime": "2023-11-21T18:56:10Z",
+    "eventSource": "dynamodb.amazonaws.com",
+    "eventName": "CreateTable",
+    "awsRegion": "us-east-1",
+    "sourceIPAddress": "1.1.1.1",
+    "userAgent": "Custom User Agent",
+    "requestParameters": {
+        "attributeDefinitions": [
+            {
+                "attributeName": "PK",
+                "attributeType": "S"
+            },
+            {
+                "attributeName": "SK",
+                "attributeType": "S"
+            }
+        ],
+        "tableName": "test",
+        "keySchema": [
+            {
+                "attributeName": "PK",
+                "keyType": "HASH"
+            },
+            {
+                "attributeName": "SK",
+                "keyType": "RANGE"
+            }
+        ],
+        "biyllingMode": "PROVISIONED",
+        "provisionedThroughput": {
+            "readCapacityUnits": 5,
+            "writeCapacityUnits": 5
+        },
+        "tableClass": "STANDARD",
+        "deletionProtectionEnabled": false
+    },
+    "responseElements": {
+        "tableDescription": {
+            "attributeDefinitions": [
+                {
+                    "attributeName": "PK",
+                    "attributeType": "S"
+                },
+                {
+                    "attributeName": "SK",
+                    "attributeType": "S"
+                }
+            ],
+            "tableName": "test",
+            "keySchema": [
+                {
+                    "attributeName": "PK",
+                    "keyType": "HASH"
+                },
+                {
+                    "attributeName": "SK",
+                    "keyType": "RANGE"
+                }
+            ],
+            "tableStatus": "CREATING",
+            "creationDateTime": "Jan 1, 2024, 6:00:00 PM",
+            "provisionedThroughput": {
+                "numberOfDecreasesToday": 0,
+                "readCapacityUnits": 5,
+                "writeCapacityUnits": 5
+            },
+            "tableSizeBytes": 0,
+            "itemCount": 0,
+            "tableArn": "arn:aws:dynamodb:us-east-1:1234567890:table/test",
+            "tableId": "1111-2222-3333-4444",
+            "tableClassSummary": {
+                "tableClass": "STANDARD"
+            },
+            "deletionProtectionEnabled": false
+        }
+    },
+    "requestID": "ABDCDEFGHIJKLMNOPQRST",
+    "eventID": "12345678-1234-1234-1234-1234567890",
+    "readOnly": false,
+    "resources": [
+        {
+            "accountId": "1234567890",
+            "type": "AWS::DynamoDB::Table",
+            "ARN": "arn:aws:dynamodb:us-east-1:1234567890:table/test"
+        }
+    ],
+    "eventType": "AwsApiCall",
+    "apiVersion": "2012-08-10",
+    "managementEvent": true,
+    "recipientAccountId": "1234567890",
+    "eventCategory": "Management",
+    "tlsDetails": {
+        "tlsVersion": "TLSv1.2",
+        "cipherSuite": "ECDHE-RSA-AES128-GCM-SHA256",
+        "clientProvidedHostHeader": "dynamodb.us-east-1.amazonaws.com"
+    },
+    "sessionCredentialFromConsole": "true"
+}
