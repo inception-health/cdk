@@ -21,7 +21,8 @@
     "aws-cdk": "2.x.x",
     "aws-cdk-lib": "2.x.x",
     "constructs": "10.x.x",
-    "zod": "^3.18.0"
+    "zod": "^3.18.0",
+    "esbuild": "^0.20.0"
   },
   "devDependencies": {
     "@aws-sdk/client-lambda": "3.454.0",
@@ -30,6 +31,8 @@
     "@inception-health/cdk-tsconfig": "workspace:*",
     "@types/jest": "29.5.12",
     "@types/node": "20.11.16",
+    "esbuild": "0.20.0",
+    "esbuild-jest": "0.5.0",
     "aws-cdk": "2.126.0",
     "aws-cdk-lib": "2.126.0",
     "constructs": "10.3.0",
