@@ -1,5 +1,31 @@
 # Inception Health CDK Constructs
 
+Inception Health provides a set of opinionated AWS CDK constructs to help you build secure, compliant, and scalable applications on AWS. These constructs are designed with HIPAA compliance and security best practices in mind, allowing you to focus on your application logic while we handle the infrastructure.
+
+Inception Health has identified CDK as a way to distribute our opinionated mechanisms for leveraging AWS resources in the "right" ways.
+
+## Key Features
+
+* Tied deeply into AWS using native tools.
+* Built with HIPAA Compliance and Security in mind.
+* Typescript infrastructure as code.
+* Opinionated constructs allow teams to focus on their product and not AWS APIs.
+
+## CDK Constructs
+
+### SecureBucket
+
+The `@inception-health/cdk-secure-bucket` package provides a construct that extends an S3 bucket. This construct handles security best practices and is required if you're storing PII/PHI.
+
+### SecureStore
+
+The `@inception-health/cdk-secure-store` package provides a construct that creates a secure DynamoDB table conformant to Inception Health HIPAA compliance and policies. It includes features such as encryption, high availability, disaster recovery, and monitoring.
+
+### Lambda
+
+The `@inception-health/cdk-lambda` package provides a custom AWS Lambda construct for the AWS Cloud Development Kit (CDK). This construct simplifies the creation and management of AWS Lambda functions with advanced logging, monitoring, and dead letter queue (DLQ) support.
+
+
 ## Getting started
 
 To start using this repository, run the following command:
@@ -28,16 +54,6 @@ In that sense, AWS CDK is a framework that wraps CF and more importantly exposes
 
 > The idea of closing the gap between coding your infrastructure and your business logic is a discussion of its own right. It can be actually a curse; and a reckless amalgamation of both can come at our demise.
 
-## Vision
-
-Inception Health has identified CDK as a way to distribute our opinionated mechanisms for leveraging aws resources in the "right" ways.
-
-## Key Features
-
-* Tied deeply into AWS using native tools.
-* Built with HIPAA Compliance and Security in mind.
-* Typescript infrastructure as code.
-* Opinionated constructs allow teams to focus on their product and not AWS APIs.
 
 ## Tools and Structure
 
@@ -52,3 +68,4 @@ This monorepo is based on the following tools and technologies:
 - [prettier](https://prettier.io/) for code formatting.
 - [changeset](https://github.com/changesets/changesets) to manage versioning and changelogs with a focus on monorepos.
 - [jest](https://jestjs.io/) a delightful JavaScript Testing Framework with a focus on simplicity.
+
