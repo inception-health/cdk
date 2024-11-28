@@ -1,13 +1,16 @@
 import path from "path";
 
 import {
+  App,
+  Aspects,
   aws_dynamodb,
   aws_kms,
   aws_logs,
   CfnElement,
   Stack,
 } from "aws-cdk-lib";
-import { Match, Template } from "aws-cdk-lib/assertions";
+import { Match, Template, Annotations } from "aws-cdk-lib/assertions";
+import { HIPAASecurityChecks } from "cdk-nag";
 
 import { Lambda } from "../../lib/lambda";
 
@@ -23,6 +26,33 @@ describe("Lambda", () => {
     process.env = oldEnv;
   });
 
+  it("should pass cdk-nag HIPAASecurityChecks configuration", async () => {
+    // GIVEN
+    const app = new App();
+    const stack = new Stack(app);
+    Aspects.of(stack).add(new HIPAASecurityChecks({ verbose: true }));
+
+    // WHEN
+    new Lambda(stack, "lambda-demo", {
+      name: "hello-world",
+      file: path.join(__dirname, "./mocks/function.ts"),
+    });
+    app.synth();
+
+    // THEN
+    const errors = Annotations.fromStack(stack).findError(
+      "*",
+      Match.stringLikeRegexp("HIPAA.*"),
+    );
+    expect(errors).toHaveLength(0);
+
+    const warnings = Annotations.fromStack(stack).findWarning(
+      "*",
+      Match.stringLikeRegexp("HIPAA.*"),
+    );
+    expect(warnings).toHaveLength(0);
+  });
+
   it("should have a minimum build", () => {
     // Given
     const stack = new Stack();
@@ -35,7 +65,7 @@ describe("Lambda", () => {
 
     // Then
     const template = Template.fromStack(stack);
-    template.resourceCountIs("AWS::Lambda::Function", 2);
+    template.resourceCountIs("AWS::Lambda::Function", 1);
   });
 
   it("should match a build with all configuration", () => {
@@ -57,7 +87,7 @@ describe("Lambda", () => {
 
     // Then
     const template = Template.fromStack(stack);
-    template.resourceCountIs("AWS::Lambda::Function", 2);
+    template.resourceCountIs("AWS::Lambda::Function", 1);
     template.hasResourceProperties("AWS::Lambda::Function", {
       Description: "here is a demo description of the lambda",
       Handler: "handler2.ts",
