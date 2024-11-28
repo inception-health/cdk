@@ -227,7 +227,7 @@ export class Lambda extends Construct implements aws_iam.IGrantable {
       insightsVersion: aws_lambda.LambdaInsightsVersion.VERSION_1_0_229_0,
       // Logs
       logGroup: this.cdk.logGroup,
-      logFormat: aws_lambda.LogFormat.JSON,
+      loggingFormat: aws_lambda.LoggingFormat.JSON,
       applicationLogLevel: aws_lambda.ApplicationLogLevel.INFO,
       systemLogLevel: aws_lambda.SystemLogLevel.INFO,
       // Customization
