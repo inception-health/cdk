@@ -18,6 +18,8 @@
     "test:u": "jest --coverage -u"
   },
   "peerDependencies": {
+    "@aws-sdk/client-lambda": "^3.x.x",
+    "@aws-sdk/client-sqs": "^3.x.x",
     "aws-cdk": "2.x.x",
     "aws-cdk-lib": "2.x.x",
     "constructs": "10.x.x",
@@ -25,15 +27,15 @@
     "zod": "^3.18.0"
   },
   "devDependencies": {
-    "@aws-sdk/client-lambda": "3.454.0",
-    "@aws-sdk/client-sqs": "3.454.0",
+    "@aws-sdk/client-lambda": "3.699.0",
+    "@aws-sdk/client-sqs": "3.699.0",
     "@inception-health/cdk-jest": "workspace:*",
     "@inception-health/cdk-tsconfig": "workspace:*",
     "@types/jest": "29.5.12",
     "@types/node": "20.11.19",
-    "aws-cdk": "2.128.0",
-    "aws-cdk-lib": "2.128.0",
-    "constructs": "10.3.0",
+    "aws-cdk": "2.171.1",
+    "aws-cdk-lib": "2.171.1",
+    "constructs": "10.4.2",
     "esbuild": "0.20.0",
     "esbuild-jest": "0.5.0",
     "eslint-config-cdk-inception": "workspace:*",
