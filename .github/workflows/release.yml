@@ -1,0 +1,60 @@
+name: Release
+
+on:
+  workflow_run:
+    workflows: [CI]
+    branches: [main]
+    types: 
+      - completed
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  version:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+      packages: write
+      pull-requests: write
+      issues: read
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+
+      - name: check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: setup node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      
+      - name: install dependencies
+        run: pnpm ci:install
+
+      - name: create release Pull Request
+        uses: changesets/action@v1
+        with:
+          version: pnpm ci:version
+          commit: "chore: update versions"
+          title: "chore: update versions"
+          publish: pnpm ci:publish
+        env:
+          HOME: ${{ github.workspace }}  # https://github.com/changesets/action/issues/147
+          GITHUB_TOKEN: ${{ secrets.DEPLOY_PAT }}
+          NPM_TOKEN: ${{ secrets.NPM_DEPLOY_TOKEN }}
+
+  on-failure:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    steps:
+      - run: echo 'The triggering workflow failed'

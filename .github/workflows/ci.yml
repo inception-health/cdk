@@ -25,7 +25,7 @@ jobs:
 
       - uses: pnpm/action-setup@v2.0.1
         with:
-          version: 9.6.0
+          version: 9
 
       - name: setup node.js environment
         uses: actions/setup-node@v2
@@ -55,7 +55,7 @@ jobs:
 
       - uses: pnpm/action-setup@v2.0.1
         with:
-          version: 9.6.0
+          version: 9
 
       - name: setup node.js environment
         uses: actions/setup-node@v2
@@ -81,7 +81,7 @@ jobs:
 
       - uses: pnpm/action-setup@v2.0.1
         with:
-          version: 9.6.0
+          version: 9
 
       - name: setup node.js environment
         uses: actions/setup-node@v2
