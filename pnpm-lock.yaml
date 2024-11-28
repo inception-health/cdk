@@ -84,8 +84,8 @@ importers:
         specifier: 5.3.3
         version: 5.3.3
       zod:
-        specifier: 3.18.0
-        version: 3.18.0
+        specifier: 3.22.3
+        version: 3.22.3
 
   packages/cdk-secure-bucket:
     devDependencies:
@@ -4406,8 +4406,8 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
-  zod@3.18.0:
-    resolution: {integrity: sha512-gwTm8RfUCe8l9rDwN5r2A17DkAa8Ez4Yl4yXqc5VqeGaXaJahzYYXbTwvhroZi0SNBqTwh/bKm2N0mpCzuw4bA==}
+  zod@3.22.3:
+    resolution: {integrity: sha512-EjIevzuJRiRPbVH4mGc8nApb/lVLKVpmUhAaR5R5doKGfAnGJ6Gr3CViAVjP+4FWSxCsybeWQdcgCtbX+7oZug==}
 
 snapshots:
 
@@ -9710,4 +9710,4 @@ snapshots:
 
   yocto-queue@0.1.0: {}
 
-  zod@3.18.0: {}
+  zod@3.22.3: {}
