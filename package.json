@@ -29,8 +29,5 @@
     "syncpack": "12.3.0",
     "turbo": "1.12.4"
   },
-  "engines": {
-    "node": ">=20.0.0"
-  },
   "repository": "inception-health/cdk.git"
 }
