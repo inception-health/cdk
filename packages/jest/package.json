@@ -2,6 +2,7 @@
   "name": "@inception-health/cdk-jest",
   "version": "0.0.1",
   "license": "MIT",
+  "private": true,
   "main": "jest.config.js",
   "peerDependencies": {
     "@types/jest": "29.x.x",
