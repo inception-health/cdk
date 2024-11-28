@@ -5,8 +5,10 @@ import {
   aws_dynamodb,
   CfnElement,
   aws_iam,
+  Aspects,
 } from "aws-cdk-lib";
-import { Match, Template } from "aws-cdk-lib/assertions";
+import { Match, Template, Annotations } from "aws-cdk-lib/assertions";
+import { HIPAASecurityChecks } from "cdk-nag";
 
 import { SecureStore } from "../lib/store";
 
@@ -292,6 +294,41 @@ describe("Secure Store", () => {
           partitionKey: undefined as any,
         });
       }).toThrowError("The property partitionKey is required.");
+    });
+  });
+
+  describe("HIPAA Compliance", () => {
+    it("should pass cdk-nag HIPAASecurityChecks configuration", async () => {
+      // GIVEN
+      const app = new App();
+      const stack = new Stack(app, "TestStack", {
+        env: {
+          region: "us-east-1",
+          account: "123456789012",
+        },
+      });
+      Aspects.of(stack).add(new HIPAASecurityChecks({ verbose: true }));
+
+      // WHEN
+      new SecureStore(stack, "MySecureStore", {
+        tableName,
+        encryptionKey: encryptionKey,
+      });
+
+      app.synth();
+
+      // THEN
+      const errors = Annotations.fromStack(stack).findError(
+        "*",
+        Match.stringLikeRegexp("HIPAA.*"),
+      );
+      expect(errors).toHaveLength(0);
+
+      const warnings = Annotations.fromStack(stack).findWarning(
+        "*",
+        Match.stringLikeRegexp("HIPAA.*"),
+      );
+      expect(warnings).toHaveLength(0);
     });
   });
 
