@@ -2,6 +2,7 @@
   "name": "@inception-health/cdk-tsconfig",
   "version": "0.0.1",
   "license": "MIT",
+  "private": true,
   "main": "index.js",
   "files": [
     "base.json",
