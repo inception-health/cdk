@@ -7,7 +7,6 @@ module.exports = {
   extends: [
     "plugin:@typescript-eslint/recommended", // Uses the recommended rules from the @typescript-eslint/eslint-plugin
     "plugin:prettier/recommended",
-    "plugin:sonarjs/recommended",
     "plugin:typescript-sort-keys/recommended", // Enables sorting of object properties
   ],
   plugins: [
@@ -21,7 +20,6 @@ module.exports = {
     "@typescript-eslint/no-explicit-any": "warn",
     "@typescript-eslint/no-unused-vars": "warn",
     "tsdoc/syntax": "warn",
-    "sonarjs/no-duplicate-string": "warn",
     // Importing rules
     "import/order": [
       "error",
