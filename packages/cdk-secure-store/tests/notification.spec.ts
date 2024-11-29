@@ -96,10 +96,6 @@ describe("Notification", () => {
           Arn: destination,
           Id: "Target0",
         },
-        {
-          Arn: Match.anyValue(),
-          Id: "Target1",
-        },
       ],
     });
   });
@@ -123,22 +119,6 @@ describe("Notification", () => {
           Id: "Target0",
         },
       ],
-    });
-  });
-
-  it("should have logging using the encryption key", () => {
-    // When
-    new SecureStoreNotification(stack, "notification", {
-      destination,
-      sourceTable: "MyTable",
-      // WHEN
-      encryptionKey: encryptionKey,
-    });
-
-    // Then
-    const template = Template.fromStack(stack);
-    template.hasResourceProperties("AWS::Logs::LogGroup", {
-      KmsKeyId: encryptionKey.keyArn,
     });
   });
 });

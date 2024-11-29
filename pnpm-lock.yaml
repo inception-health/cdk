@@ -63,6 +63,9 @@ importers:
       aws-cdk:
         specifier: 2.171.1
         version: 2.171.1
+      cdk:
+        specifier: 2.171.1
+        version: 2.171.1
       dotenv:
         specifier: 16.4.4
         version: 16.4.4
@@ -1926,6 +1929,11 @@ packages:
     peerDependencies:
       aws-cdk-lib: ^2.156.0
       constructs: ^10.0.5
+
+  cdk@2.171.1:
+    resolution: {integrity: sha512-EvsHeMGaZyzoZw6fA7yXWN2eoN1S+cYB6ue0l2KwDcqigC3wMBpjsCEAd4eIJio0PrVWDWa59ed69iNJsMBetg==}
+    engines: {node: '>= 14.15.0'}
+    hasBin: true
 
   chalk@2.4.2:
     resolution: {integrity: sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==}
@@ -6826,6 +6834,10 @@ snapshots:
     dependencies:
       aws-cdk-lib: 2.171.1(constructs@10.4.2)
       constructs: 10.4.2
+
+  cdk@2.171.1:
+    dependencies:
+      aws-cdk: 2.171.1
 
   chalk@2.4.2:
     dependencies:
