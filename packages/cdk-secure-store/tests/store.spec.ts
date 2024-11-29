@@ -6,6 +6,7 @@ import {
   CfnElement,
   aws_iam,
   Aspects,
+  aws_sns,
 } from "aws-cdk-lib";
 import { Match, Template, Annotations } from "aws-cdk-lib/assertions";
 import { HIPAASecurityChecks } from "cdk-nag";
@@ -175,11 +176,11 @@ describe("Secure Store", () => {
       const store = new SecureStore(stack, "MySecureStore", {
         tableName,
         encryptionKey: encryptionKey,
-        devOpsTopicArn: devOpsTopicArn,
+        alertsTopic: devOpsTopicArn,
       });
 
       // Then
-      expect(store.components.devops).toBeDefined();
+      expect(store.components.notifications).toBeDefined();
       Template.fromStack(stack).resourceCountIs("AWS::Events::Rule", 1);
     });
 
@@ -272,7 +273,7 @@ describe("Secure Store", () => {
       expect(() => {
         new SecureStore(stack, "MySecureStore", {
           tableName,
-          devOpsTopicArn: devOpsTopicArn,
+          alertsTopic: devOpsTopicArn,
           // WHEN
           encryptionKey: undefined as any,
         });
@@ -289,7 +290,7 @@ describe("Secure Store", () => {
         new SecureStore(stack, "MySecureStore", {
           tableName,
           encryptionKey: encryptionKey,
-          devOpsTopicArn: devOpsTopicArn,
+          alertsTopic: devOpsTopicArn,
           // WHEN
           partitionKey: undefined as any,
         });
@@ -310,9 +311,16 @@ describe("Secure Store", () => {
       Aspects.of(stack).add(new HIPAASecurityChecks({ verbose: true }));
 
       // WHEN
+      const topic = new aws_sns.Topic(stack, "MyTopic", {
+        enforceSSL: true,
+        masterKey: encryptionKey,
+        topicName: "unit-test-topic",
+      });
+
       new SecureStore(stack, "MySecureStore", {
         tableName,
         encryptionKey: encryptionKey,
+        alertsTopic: topic.topicArn,
       });
 
       app.synth();

@@ -27,7 +27,7 @@ describe("SecureStoreAlarms", () => {
 
   it("should match the snapshot", () => {
     new SecureStoreAlarms(store, "MySecureStoreAlarms", {
-      devOpsTopicArn: topic.topicArn,
+      alertsTopic: topic.topicArn,
       systemErrorAlarm: true,
       throttleAlarm: true,
     });
@@ -41,7 +41,7 @@ describe("SecureStoreAlarms", () => {
       store,
       "MySecureStoreAlarms",
       {
-        devOpsTopicArn: topic.topicArn,
+        alertsTopic: topic.topicArn,
         systemErrorAlarm: true,
         throttleAlarm: true,
       },
@@ -52,7 +52,7 @@ describe("SecureStoreAlarms", () => {
 
   it("should setup system error alarm if systemErrorAlarm prop is true", () => {
     new SecureStoreAlarms(store, "MySecureStoreAlarms", {
-      devOpsTopicArn: topic.topicArn,
+      alertsTopic: topic.topicArn,
       systemErrorAlarm: true,
       throttleAlarm: false,
     });
@@ -82,7 +82,7 @@ describe("SecureStoreAlarms", () => {
 
   it("should setup throttle alarm if throttleAlarm prop is true", () => {
     new SecureStoreAlarms(store, "MySecureStoreAlarms", {
-      devOpsTopicArn: topic.topicArn,
+      alertsTopic: topic.topicArn,
       systemErrorAlarm: false,
       throttleAlarm: true,
     });

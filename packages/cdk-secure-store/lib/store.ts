@@ -32,6 +32,12 @@ export interface SecureStoreProps
       >
     > {
   /**
+   * The SNS topic to send DevOps notifications to. The SNS topic must be
+   * created in the same account and region as the DynamoDB table.
+   */
+  alertsTopic?: string;
+
+  /**
    * AWS Backup for the DynamoDB table.
    *
    * @remarks
@@ -41,12 +47,6 @@ export interface SecureStoreProps
    *@defaultValue true
    */
   backupEnabled?: boolean;
-
-  /**
-   * The SNS topic to send DevOps notifications to. The SNS topic must be
-   * created in the same account and region as the DynamoDB table.
-   */
-  devOpsTopicArn?: string;
 
   /**
    * The encryption key to use for the DynamoDB table. The key is also used for
@@ -141,7 +141,7 @@ interface SecureStoreResources {
 interface SecureStoreComponents {
   alarms: SecureStoreAlarms;
   backup: SecureStoreBackup;
-  devops: SecureStoreNotification;
+  notifications: SecureStoreNotification;
 }
 
 /**
@@ -207,7 +207,7 @@ export class SecureStore extends Construct {
     // rule will not trigger anymore for the old table. However, in this setup,
     // if we change the table name, the monitoring will be triggered for the new
     // table name. We decided that this is the preferred behavior.
-    this.setupDevOps();
+    this.setupNotifications();
 
     this.setupTableEncryption();
     this.setupDynamoTable();
@@ -269,15 +269,19 @@ export class SecureStore extends Construct {
   }
 
   // !Private setup
-  private setupDevOps() {
-    if (!this.props.devOpsTopicArn) return;
+  private setupNotifications() {
+    if (!this.props.alertsTopic) return;
 
-    this.components.devops = new SecureStoreNotification(this, "devops", {
-      destination: this.props.devOpsTopicArn,
-      sourceTable: this.props.tableName,
-      encryptionKey: this.props.encryptionKey,
-      enableLogs: true,
-    });
+    this.components.notifications = new SecureStoreNotification(
+      this,
+      "notifications",
+      {
+        destination: this.props.alertsTopic,
+        sourceTable: this.props.tableName,
+        encryptionKey: this.props.encryptionKey,
+        enableLogs: true,
+      },
+    );
   }
 
   private setupTableEncryption() {
@@ -322,7 +326,7 @@ export class SecureStore extends Construct {
 
   private setupAlarms() {
     this.components.alarms = new SecureStoreAlarms(this, "alarms", {
-      devOpsTopicArn: this.props.devOpsTopicArn,
+      alertsTopic: this.props.alertsTopic,
     });
   }
 

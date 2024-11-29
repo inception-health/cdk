@@ -112,8 +112,6 @@ export class SecureStoreNotification extends Construct {
     this.setupBus();
 
     this.setupRule();
-
-    this.setupLogs();
   }
 
   // !Private Methods
@@ -161,21 +159,5 @@ export class SecureStoreNotification extends Construct {
 
     // Add the target to the rule
     this.cdk.rule.addTarget(new aws_events_targets.SnsTopic(this.cdk.topic));
-  }
-
-  private setupLogs() {
-    if (!this.props.enableLogs) return;
-
-    // New Cloudwatch Log Group to deliver EventBridge Events to.
-    this.cdk.logs = new aws_logs.LogGroup(this, "logs", {
-      logGroupName: `/inception/devops/${this.props.sourceTable}-dynamodb--monitoring`,
-      retention: aws_logs.RetentionDays.TWO_WEEKS,
-      encryptionKey: this.props.encryptionKey,
-    });
-
-    // Define rule that will deliver EventBridge events to a Cloudwatch Log Group
-    this.cdk.rule.addTarget(
-      new aws_events_targets.CloudWatchLogGroup(this.cdk.logs),
-    );
   }
 }
