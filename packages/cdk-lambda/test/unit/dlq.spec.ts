@@ -1,154 +1,267 @@
 import path from "path";
 
-import { CfnElement, Stack, aws_kms } from "aws-cdk-lib";
-import { Match, Template } from "aws-cdk-lib/assertions";
+import { CfnElement, Stack, aws_kms, Aspects, App } from "aws-cdk-lib";
+import { Match, Template, Annotations } from "aws-cdk-lib/assertions";
+import { HIPAASecurityChecks } from "cdk-nag";
 
 import { DeadLetterQueue } from "../../lib/dlq/queue";
 import { Lambda } from "../../lib/lambda";
 
 describe("Dead Letter Queue", () => {
-  it("should setup an alarm", () => {
-    // Given
-    const stack = new Stack();
+  describe("General", () => {
+    it("should match the snapshot", () => {
+      // Given
+      const stack = new Stack();
+      const source = new Lambda(stack, "handler", {
+        file: path.join(__dirname, "./mocks/function.ts"),
+        name: "some-lambda-function",
+      });
 
-    // When
-    new DeadLetterQueue(stack, "dlq", {
-      name: "some-lambda-function",
+      // When
+      new DeadLetterQueue(stack, "dlq", {
+        name: "some-lambda-function",
+        source: source,
+      });
+
+      // Then
+      expect(Template.fromStack(stack)).toMatchSnapshot();
     });
 
-    // Then
-    const template = Template.fromStack(stack);
-    expect(template).toMatchSnapshot();
-    template.resourceCountIs("AWS::SQS::Queue", 1);
-    template.resourceCountIs("AWS::CloudWatch::Alarm", 1);
-  });
+    it("should setup an alarm", () => {
+      // Given
+      const stack = new Stack();
+      const source = new Lambda(stack, "handler", {
+        file: path.join(__dirname, "./mocks/function.ts"),
+        name: "some-lambda-function",
+      });
 
-  it("should use SSE-KMS if no encryption key is provided", () => {
-    const stack = new Stack();
-    const dlqName = "some-dlq-name";
+      // When
+      new DeadLetterQueue(stack, "dlq", {
+        name: "some-lambda-function",
+        source: source,
+      });
 
-    // When
-    new DeadLetterQueue(stack, "dlq", {
-      name: dlqName,
-    });
-
-    // Then
-    const template = Template.fromStack(stack);
-    template.hasResourceProperties("AWS::SQS::Queue", {
-      KmsMasterKeyId: "alias/aws/sqs",
-      QueueName: `${dlqName}--dlq`,
-    });
-  });
-
-  it("should use custom KMS", () => {
-    const stack = new Stack();
-    const dlqName = "some-dlq-name";
-    const key = new aws_kms.Key(stack, "key", {
-      alias: "my-key",
-    });
-
-    // When
-    new DeadLetterQueue(stack, "dlq", {
-      name: dlqName,
-      encryption: key,
-    });
-
-    // Then
-    const template = Template.fromStack(stack);
-
-    template.hasResourceProperties("AWS::SQS::Queue", {
-      KmsMasterKeyId: {
-        "Fn::GetAtt": [Match.anyValue(), "Arn"],
-      },
-      QueueName: `${dlqName}--dlq`,
+      // Then
+      const template = Template.fromStack(stack);
+      template.resourceCountIs("AWS::CloudWatch::Alarm", 1);
     });
   });
 
-  it("should enable redrive for Lambda function", () => {
-    const stack = new Stack();
-    const handler = new Lambda(stack, "handler", {
-      file: path.join(__dirname, "../../lib/dlq/handler.ts"),
-      name: "some-lambda-function",
-    });
-    const dlq = new DeadLetterQueue(stack, "dlq", {
-      name: "some-dlq-name",
+  describe("Encryption", () => {
+    it("should use SSE-KMS if no encryption key is provided", () => {
+      const stack = new Stack();
+      const source = new Lambda(stack, "handler", {
+        file: path.join(__dirname, "./mocks/function.ts"),
+        name: "some-lambda-function",
+      });
+      const dlqName = "some-dlq-name";
+
+      // When
+      new DeadLetterQueue(stack, "dlq", {
+        name: dlqName,
+        source: source,
+      });
+
+      // Then
+      const template = Template.fromStack(stack);
+      template.hasResourceProperties("AWS::SQS::Queue", {
+        KmsMasterKeyId: "alias/aws/sqs",
+      });
     });
 
-    // When
-    const dlqRedriveHandler = dlq.attachRedrive(handler);
+    it("should use custom KMS", () => {
+      const stack = new Stack();
+      const source = new Lambda(stack, "handler", {
+        file: path.join(__dirname, "./mocks/function.ts"),
+        name: "some-lambda-function",
+      });
+      const dlqName = "some-dlq-name";
+      const key = new aws_kms.Key(stack, "key", {
+        alias: "my-key",
+      });
 
-    // Expect
-    const expectedDqlRef = stack.getLogicalId(
-      dlq.cdk.queue.node.defaultChild as CfnElement,
-    );
-    const expectedLambdaRef = stack.getLogicalId(
-      handler.cdk.function.node.defaultChild as CfnElement,
-    );
-    const expectedDlqHanderRoleRef = stack.getLogicalId(
-      dlqRedriveHandler.cdk.function.role?.node.defaultChild as CfnElement,
-    );
-    // Then
-    const template = Template.fromStack(stack);
-    // 1. Should have a Lambda function with the original lambda function as a
-    //    destination, and the DLQ as the source.
-    template.hasResourceProperties("AWS::Lambda::Function", {
-      Environment: {
-        Variables: {
-          DLQ_URL: {
-            Ref: expectedDqlRef,
-          },
-          LAMBDA_DESTINATION_ARN: {
-            "Fn::GetAtt": [expectedLambdaRef, "Arn"],
-          },
+      // When
+      new DeadLetterQueue(stack, "dlq", {
+        name: dlqName,
+        encryption: key,
+        source: source,
+      });
+
+      // Then
+      const template = Template.fromStack(stack);
+
+      template.hasResourceProperties("AWS::SQS::Queue", {
+        KmsMasterKeyId: {
+          "Fn::GetAtt": [Match.anyValue(), "Arn"],
         },
-      },
+      });
     });
-    // 2. Should have a Lambda permission to retrieve messages from the DLQ. and
-    //    to send messages to the original Lambda function.
-    template.hasResourceProperties("AWS::IAM::Policy", {
-      PolicyDocument: {
-        Statement: Match.arrayWith([
-          {
-            Action: [
-              "sqs:ReceiveMessage",
-              "sqs:ChangeMessageVisibility",
-              "sqs:GetQueueUrl",
-              "sqs:DeleteMessage",
-              "sqs:GetQueueAttributes",
-            ],
-            Effect: "Allow",
-            Resource: {
-              "Fn::GetAtt": [expectedDqlRef, "Arn"],
+  });
+
+  describe("DLQ Lambda Handler", () => {
+    it("should have a lambda function", () => {
+      const stack = new Stack();
+      const source = new Lambda(stack, "handler", {
+        file: path.join(__dirname, "./mocks/function.ts"),
+        name: "some-lambda-function",
+      });
+
+      // When
+      new DeadLetterQueue(stack, "dlq", {
+        name: "some-dlq-name",
+        source: source,
+      });
+
+      // Then
+      const template = Template.fromStack(stack);
+      template.resourceCountIs("AWS::Lambda::Function", 2);
+    });
+
+    it("should have appropriate environment variables", () => {
+      const stack = new Stack();
+      const source = new Lambda(stack, "handler", {
+        file: path.join(__dirname, "./mocks/function.ts"),
+        name: "some-lambda-function",
+      });
+
+      // When
+      const dlq = new DeadLetterQueue(stack, "dlq", {
+        name: "some-dlq-name",
+        source: source,
+      });
+
+      // Expect
+      const expectedDqlRef = stack.getLogicalId(
+        dlq.cdk.queue.node.defaultChild as CfnElement,
+      );
+      const expectedLambdaRef = stack.getLogicalId(
+        source.cdk.function.node.defaultChild as CfnElement,
+      );
+
+      // Then
+      const template = Template.fromStack(stack);
+      template.hasResourceProperties("AWS::Lambda::Function", {
+        Environment: {
+          Variables: {
+            DLQ_URL: {
+              Ref: expectedDqlRef,
+            },
+            LAMBDA_DESTINATION_ARN: {
+              "Fn::GetAtt": [expectedLambdaRef, "Arn"],
             },
           },
-          {
-            Action: "lambda:InvokeFunction",
-            Effect: "Allow",
-            Resource: [
-              {
-                "Fn::GetAtt": [expectedLambdaRef, "Arn"],
-              },
-              {
-                "Fn::Join": [
-                  "",
-                  [
-                    {
-                      "Fn::GetAtt": [expectedLambdaRef, "Arn"],
-                    },
-                    ":*",
-                  ],
-                ],
-              },
-            ],
-          },
-        ]),
-        Version: "2012-10-17",
-      },
-      Roles: [
-        {
-          Ref: expectedDlqHanderRoleRef,
         },
-      ],
+      });
+    });
+
+    it("should have invocation permission to the source function", () => {
+      const stack = new Stack();
+      const source = new Lambda(stack, "handler", {
+        file: path.join(__dirname, "./mocks/function.ts"),
+        name: "some-lambda-function",
+      });
+
+      // When
+      const dlq = new DeadLetterQueue(stack, "dlq", {
+        name: "some-dlq-name",
+        source: source,
+      });
+
+      // Expect
+      const expectedLambdaRef = stack.getLogicalId(
+        source.cdk.function.node.defaultChild as CfnElement,
+      );
+      const expectedDlqHandlerRoleRef = stack.getLogicalId(
+        dlq.cdk.queueProcessor.cdk.function.role?.node
+          .defaultChild as CfnElement,
+      );
+
+      // Then
+      const template = Template.fromStack(stack);
+      template.hasResourceProperties("AWS::IAM::Policy", {
+        PolicyDocument: {
+          Statement: Match.arrayWith([
+            {
+              Action: "lambda:InvokeFunction",
+              Effect: "Allow",
+              Resource: [
+                {
+                  "Fn::GetAtt": [expectedLambdaRef, "Arn"],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [expectedLambdaRef, "Arn"],
+                      },
+                      ":*",
+                    ],
+                  ],
+                },
+              ],
+            },
+          ]),
+          Version: "2012-10-17",
+        },
+        Roles: [
+          {
+            Ref: expectedDlqHandlerRoleRef,
+          },
+        ],
+      });
+    });
+
+    it("should have permissions to read from the DLQ queue", () => {
+      const stack = new Stack();
+      const source = new Lambda(stack, "handler", {
+        file: path.join(__dirname, "./mocks/function.ts"),
+        name: "some-lambda-function",
+      });
+
+      // When
+      const dlq = new DeadLetterQueue(stack, "dlq", {
+        name: "some-dlq-name",
+        source: source,
+      });
+
+      // Expect
+      const expectedDqlRef = stack.getLogicalId(
+        dlq.cdk.queue.node.defaultChild as CfnElement,
+      );
+      const expectedDlqHandlerRoleRef = stack.getLogicalId(
+        dlq.cdk.queueProcessor.cdk.function.role?.node
+          .defaultChild as CfnElement,
+      );
+      // Then
+      const template = Template.fromStack(stack);
+      // 2. Should have a Lambda permission to retrieve messages from the DLQ. and
+      //    to send messages to the original Lambda function.
+      template.hasResourceProperties("AWS::IAM::Policy", {
+        PolicyDocument: {
+          Statement: Match.arrayWith([
+            {
+              Action: [
+                "sqs:ReceiveMessage",
+                "sqs:ChangeMessageVisibility",
+                "sqs:GetQueueUrl",
+                "sqs:DeleteMessage",
+                "sqs:GetQueueAttributes",
+              ],
+              Effect: "Allow",
+              Resource: {
+                "Fn::GetAtt": [expectedDqlRef, "Arn"],
+              },
+            },
+          ]),
+          Version: "2012-10-17",
+        },
+        Roles: [
+          {
+            Ref: expectedDlqHandlerRoleRef,
+          },
+        ],
+      });
     });
   });
 });

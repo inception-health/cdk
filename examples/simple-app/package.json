@@ -1,10 +1,10 @@
 {
-  "name": "simple-app",
-  "version": "0.0.01",
+  "name": "sample-app",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
-    "build": "tsc",
-    "cdk": "cdk",
+    "build": "npx cdk synth",
+    "cdk": "npx cdk",
     "lint": "TIMING=1 eslint 'src/**/*.{js,ts}'",
     "lint:fix": "TIMING=1 eslint 'src/**/*.{js,ts}' --fix",
     "watch": "tsc -w"
@@ -15,12 +15,14 @@
     "aws-cdk-lib": "2.171.1",
     "cdk-nag": "2.34.9",
     "constructs": "10.4.2",
+    "esbuild": "0.20.0",
     "source-map-support": "0.5.21"
   },
   "devDependencies": {
     "@inception-health/cdk-tsconfig": "workspace:*",
     "@types/node": "20.11.19",
     "aws-cdk": "2.171.1",
+    "cdk": "2.171.1",
     "dotenv": "16.4.4",
     "eslint-config-cdk-inception": "workspace:*",
     "ts-node": "10.9.2",

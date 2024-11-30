@@ -15,14 +15,8 @@ import { DeadLetterQueue } from "./dlq/queue";
 /**
  * Interface for LambdaProps
  */
-export interface LambdaProps {
-  /**
-   * Activate a Dead Letter Queue for the lambda function
-   *
-   * @defaultValue false
-   */
-  deadLetterQueue?: boolean;
-
+export interface LambdaProps
+  extends Pick<aws_lambda_nodejs.NodejsFunctionProps, "vpc" | "vpcSubnets"> {
   /**
    * Description of the lambda function
    */
@@ -77,6 +71,27 @@ export interface LambdaProps {
   name: string;
 
   /**
+   * Reserved Concurrency. Use reserved concurrency to reserve a portion of your
+   * account's concurrency for a function. This is useful if you don't want
+   * other functions taking up all the available unreserved concurrency.
+   *
+   * Reserved concurrency is the maximum number of concurrent instances that you
+   * want to allocate to your function. When you dedicate reserved concurrency
+   * to a function, no other function can use that concurrency. In other words,
+   * setting reserved concurrency can impact the concurrency pool that's
+   * available to other functions. Functions that don't have reserved
+   * concurrency share the remaining pool of unreserved concurrency.
+   *
+   * It is recommended to set the reserved concurrency to the most important
+   * functions in your application. This way, you can ensure that they have
+   * access to the concurrency they need, even when other functions are consuming
+   * the unreserved concurrency pool.
+   *
+   * @defaultValue 20
+   */
+  reservedConcurrency?: number;
+
+  /**
    * Ephemeral storage for the Lambda function.
    *
    * @defaultValue 512 MB
@@ -98,7 +113,7 @@ const defaultProps: Partial<LambdaProps> = {
   memorySize: 128,
   loggingLevel: "INFO",
   storage: Size.mebibytes(512),
-  deadLetterQueue: false,
+  reservedConcurrency: 20,
 };
 
 export interface LambdaCDK {
@@ -156,10 +171,8 @@ export class Lambda extends Construct implements aws_iam.IGrantable {
     // Setup
     this.setupLogGroup();
     this.setupRole();
-    this.setupDlq();
     this.setupFunction();
     this.setupEncryption();
-    this.setupDlqProcessor();
   }
 
   // !Public
@@ -195,15 +208,6 @@ export class Lambda extends Construct implements aws_iam.IGrantable {
     );
   }
 
-  private setupDlq() {
-    if (!this.props.deadLetterQueue) return;
-
-    this.dlq.queue = new DeadLetterQueue(this, "dlq", {
-      encryption: this.props.encryption,
-      name: this.props.name,
-    });
-  }
-
   private setupFunction() {
     this.cdk.function = new aws_lambda_nodejs.NodejsFunction(this, "function", {
       // Default
@@ -216,6 +220,7 @@ export class Lambda extends Construct implements aws_iam.IGrantable {
       timeout: this.props.timeout,
       memorySize: this.props.memorySize,
       ephemeralStorageSize: this.props.storage,
+      reservedConcurrentExecutions: this.props.reservedConcurrency,
       // CloudWatch Lambda Insights is a monitoring and troubleshooting
       // solution for serverless applications running on AWS Lambda. The
       // solution collects, aggregates, and summarizes system-level metrics
@@ -224,7 +229,7 @@ export class Lambda extends Construct implements aws_iam.IGrantable {
       // and Lambda worker shutdowns to help you isolate issues with your Lambda
       // functions and resolve them quickly.
       // Ref: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Lambda-Insights.html
-      insightsVersion: aws_lambda.LambdaInsightsVersion.VERSION_1_0_229_0,
+      insightsVersion: aws_lambda.LambdaInsightsVersion.VERSION_1_0_333_0,
       // Logs
       logGroup: this.cdk.logGroup,
       loggingFormat: aws_lambda.LoggingFormat.JSON,
@@ -239,6 +244,10 @@ export class Lambda extends Construct implements aws_iam.IGrantable {
       // Function
       entry: this.props.file,
       handler: this.props.handler,
+      // vpc
+      vpc: this.props.vpc,
+      vpcSubnets: this.props.vpcSubnets,
+      allowPublicSubnet: false,
       // Bundling
       bundling: {
         minify: true,
@@ -254,13 +263,5 @@ export class Lambda extends Construct implements aws_iam.IGrantable {
     // Setup encryption
     this.cdk.encryption = this.props.encryption;
     this.cdk.encryption.grantDecrypt(this.cdk.function);
-  }
-
-  private setupDlqProcessor() {
-    if (!this.props.deadLetterQueue) return;
-
-    if (!this.dlq.queue) throw new Error("DLQ is undefined");
-
-    this.dlq.processor = this.dlq.queue.attachRedrive(this);
   }
 }

@@ -1,0 +1,255 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Lambda General should match the snapshot 1`] = `
+{
+  "Mappings": {
+    "CloudwatchlambdainsightsversionMap": {
+      "af-south-1": {
+        "1x0x333x0xarm64": "arn:aws:lambda:af-south-1:012438385374:layer:LambdaInsightsExtension-Arm64:18",
+      },
+      "ap-east-1": {
+        "1x0x333x0xarm64": "arn:aws:lambda:ap-east-1:519774774795:layer:LambdaInsightsExtension-Arm64:18",
+      },
+      "ap-northeast-1": {
+        "1x0x333x0xarm64": "arn:aws:lambda:ap-northeast-1:580247275435:layer:LambdaInsightsExtension-Arm64:31",
+      },
+      "ap-northeast-2": {
+        "1x0x333x0xarm64": "arn:aws:lambda:ap-northeast-2:580247275435:layer:LambdaInsightsExtension-Arm64:19",
+      },
+      "ap-northeast-3": {
+        "1x0x333x0xarm64": "arn:aws:lambda:ap-northeast-3:194566237122:layer:LambdaInsightsExtension-Arm64:17",
+      },
+      "ap-south-1": {
+        "1x0x333x0xarm64": "arn:aws:lambda:ap-south-1:580247275435:layer:LambdaInsightsExtension-Arm64:22",
+      },
+      "ap-south-2": {
+        "1x0x333x0xarm64": "arn:aws:lambda:ap-south-2:891564319516:layer:LambdaInsightsExtension-Arm64:6",
+      },
+      "ap-southeast-1": {
+        "1x0x333x0xarm64": "arn:aws:lambda:ap-southeast-1:580247275435:layer:LambdaInsightsExtension-Arm64:20",
+      },
+      "ap-southeast-2": {
+        "1x0x333x0xarm64": "arn:aws:lambda:ap-southeast-2:580247275435:layer:LambdaInsightsExtension-Arm64:20",
+      },
+      "ap-southeast-3": {
+        "1x0x333x0xarm64": "arn:aws:lambda:ap-southeast-3:439286490199:layer:LambdaInsightsExtension-Arm64:18",
+      },
+      "ca-central-1": {
+        "1x0x333x0xarm64": "arn:aws:lambda:ca-central-1:580247275435:layer:LambdaInsightsExtension-Arm64:18",
+      },
+      "eu-central-1": {
+        "1x0x333x0xarm64": "arn:aws:lambda:eu-central-1:580247275435:layer:LambdaInsightsExtension-Arm64:20",
+      },
+      "eu-north-1": {
+        "1x0x333x0xarm64": "arn:aws:lambda:eu-north-1:580247275435:layer:LambdaInsightsExtension-Arm64:18",
+      },
+      "eu-south-1": {
+        "1x0x333x0xarm64": "arn:aws:lambda:eu-south-1:339249233099:layer:LambdaInsightsExtension-Arm64:18",
+      },
+      "eu-south-2": {
+        "1x0x333x0xarm64": "arn:aws:lambda:eu-south-2:352183217350:layer:LambdaInsightsExtension-Arm64:6",
+      },
+      "eu-west-1": {
+        "1x0x333x0xarm64": "arn:aws:lambda:eu-west-1:580247275435:layer:LambdaInsightsExtension-Arm64:20",
+      },
+      "eu-west-2": {
+        "1x0x333x0xarm64": "arn:aws:lambda:eu-west-2:580247275435:layer:LambdaInsightsExtension-Arm64:20",
+      },
+      "eu-west-3": {
+        "1x0x333x0xarm64": "arn:aws:lambda:eu-west-3:580247275435:layer:LambdaInsightsExtension-Arm64:18",
+      },
+      "me-south-1": {
+        "1x0x333x0xarm64": "arn:aws:lambda:me-south-1:285320876703:layer:LambdaInsightsExtension-Arm64:18",
+      },
+      "sa-east-1": {
+        "1x0x333x0xarm64": "arn:aws:lambda:sa-east-1:580247275435:layer:LambdaInsightsExtension-Arm64:18",
+      },
+      "us-east-1": {
+        "1x0x333x0xarm64": "arn:aws:lambda:us-east-1:580247275435:layer:LambdaInsightsExtension-Arm64:20",
+      },
+      "us-east-2": {
+        "1x0x333x0xarm64": "arn:aws:lambda:us-east-2:580247275435:layer:LambdaInsightsExtension-Arm64:22",
+      },
+      "us-gov-east-1": {
+        "1x0x333x0xarm64": "arn:aws-us-gov:lambda:us-gov-east-1:122132214140:layer:LambdaInsightsExtension-Arm64:3",
+      },
+      "us-gov-west-1": {
+        "1x0x333x0xarm64": "arn:aws-us-gov:lambda:us-gov-west-1:751350123760:layer:LambdaInsightsExtension-Arm64:3",
+      },
+      "us-west-1": {
+        "1x0x333x0xarm64": "arn:aws:lambda:us-west-1:580247275435:layer:LambdaInsightsExtension-Arm64:18",
+      },
+      "us-west-2": {
+        "1x0x333x0xarm64": "arn:aws:lambda:us-west-2:580247275435:layer:LambdaInsightsExtension-Arm64:20",
+      },
+    },
+  },
+  "Parameters": {
+    "BootstrapVersion": {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+  },
+  "Resources": {
+    "lambdademofunctionC779DFD0": {
+      "DependsOn": [
+        "lambdademoroleDefaultPolicy921C4C2D",
+        "lambdademorole95F35F6F",
+      ],
+      "Properties": {
+        "Architectures": [
+          "arm64",
+        ],
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "7671fef3231da5b8460e43bcffeb2c9d9d7763730b7734f98ef6960dfeda58d3.zip",
+        },
+        "EphemeralStorage": {
+          "Size": 512,
+        },
+        "FunctionName": "hello-world",
+        "Handler": "index.handler",
+        "Layers": [
+          {
+            "Fn::FindInMap": [
+              "CloudwatchlambdainsightsversionMap",
+              {
+                "Ref": "AWS::Region",
+              },
+              "1x0x333x0xarm64",
+            ],
+          },
+        ],
+        "LoggingConfig": {
+          "ApplicationLogLevel": "INFO",
+          "LogFormat": "JSON",
+          "LogGroup": {
+            "Ref": "lambdademologgroup4B86AFE9",
+          },
+          "SystemLogLevel": "INFO",
+        },
+        "MemorySize": 128,
+        "ReservedConcurrentExecutions": 20,
+        "Role": {
+          "Fn::GetAtt": [
+            "lambdademorole95F35F6F",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs20.x",
+        "Timeout": 30,
+        "TracingConfig": {
+          "Mode": "Active",
+        },
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "lambdademologgroup4B86AFE9": {
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/hello-world",
+        "RetentionInDays": 60,
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "lambdademorole95F35F6F": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/CloudWatchLambdaInsightsExecutionRolePolicy",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "lambdademoroleDefaultPolicy921C4C2D": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "xray:PutTraceSegments",
+                "xray:PutTelemetryRecords",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "lambdademoroleDefaultPolicy921C4C2D",
+        "Roles": [
+          {
+            "Ref": "lambdademorole95F35F6F",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;
