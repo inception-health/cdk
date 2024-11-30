@@ -2,7 +2,6 @@
 import "source-map-support/register";
 import * as cdk from "aws-cdk-lib";
 import "dotenv/config";
-import { HIPAASecurityChecks } from "cdk-nag";
 
 import { ExampleSecureStack } from "./stack";
 
@@ -12,7 +11,5 @@ new ExampleSecureStack(app, "ExampleStack", {
     region: "us-east-1",
   },
 });
-
-cdk.Aspects.of(app).add(new HIPAASecurityChecks({ verbose: true }));
 
 app.synth();

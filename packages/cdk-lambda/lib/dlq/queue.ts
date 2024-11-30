@@ -9,9 +9,9 @@ export interface DeadLetterQueueProps {
   /**
    * CloudWatch alarm to trigger when the queue has new events.
    *
-   * @defaultValue true
+   * @defaultValue false
    */
-  disableAlarm?: boolean;
+  enableAlarm?: boolean;
 
   /**
    * The encryption key to use for encrypting messages in the queue.
@@ -21,11 +21,20 @@ export interface DeadLetterQueueProps {
   /**
    * Name of the dead letter queue.
    */
-  name: string;
+  name?: string;
+
+  /**
+   * The source lambda function the dead letter queue is attached to.
+   *
+   * @remarks
+   * The source lambda function is the lambda function that will send messages
+   * to the dead letter queue.
+   */
+  source: Lambda;
 }
 
 const defaultProps: Partial<DeadLetterQueueProps> = {
-  disableAlarm: true,
+  enableAlarm: true,
 };
 
 /**
@@ -42,6 +51,7 @@ export class DeadLetterQueue extends Construct {
   public readonly cdk: {
     alarm: aws_cloudwatch.Alarm | undefined;
     queue: aws_sqs.IQueue;
+    queueProcessor: Lambda;
   };
 
   private readonly props: DeadLetterQueueProps;
@@ -52,49 +62,38 @@ export class DeadLetterQueue extends Construct {
     this.props = Object.assign({}, defaultProps, props);
     this.cdk = {} as any;
 
+    // Create the redrive function
+    this.setupRedriveFunction();
+
     // Create the dead letter queue
     this.setupDlq();
 
     // Create the alarm
     this.setupAlarm();
-  }
 
-  // !Public
-  /**
-   * Creates a lambda function to handle the dead letter queue.
-   *
-   * @param target The lambda function to send the messages to.
-   * @returns The lambda function that was attached to the dead letter queue.
-   */
-  public attachRedrive(target: Lambda): Lambda {
-    const lambda = new Lambda(this, "redrive", {
-      file: path.join(__dirname, "./handler.ts"),
-      handler: "handler",
-      name: `${target.cdk.function.functionName}--dlq`,
-      // Note: This is important to disable DLQ for the redrive function
-      // otherwise it will create an infinite loop.
-      deadLetterQueue: false,
-      description: `Redrive function for ${target.cdk.function.functionName} dead letter queue`,
-      environment: {
-        DLQ_URL: this.cdk.queue.queueUrl,
-        LAMBDA_DESTINATION_ARN: target.cdk.function.functionArn,
-      },
-    });
-
-    // === Permissions ===
-    // Grant the lambda function permissions to read from the queue
-    this.cdk.queue.grantConsumeMessages(lambda.cdk.function);
-
-    // Grant the lambda function permissions to invoke the target function
-    target.cdk.function.grantInvoke(lambda.cdk.function);
-
-    return lambda;
+    // Silence the CDK-Nag for the dead letter queue lambda
+    // this.silenceCdkNag();
   }
 
   // !Setup
+  private setupRedriveFunction() {
+    this.cdk.queueProcessor = new Lambda(this, "redrive", {
+      file: path.join(__dirname, "./handler.ts"),
+      handler: "handler",
+      name: `${this.props.name}--dlq-processor`,
+      description: `Redrive function for ${this.props.name} DLQ attached to ${this.props.source.cdk.function.functionName} lambda`,
+      environment: {
+        LAMBDA_DESTINATION_ARN: this.props.source.cdk.function.functionArn,
+      },
+    });
+
+    // Grant the lambda function permissions to invoke the target function
+    this.props.source.grantInvoke(this.cdk.queueProcessor);
+  }
+
   private setupDlq() {
     this.cdk.queue = new aws_sqs.Queue(this, "queue", {
-      queueName: `${this.props.name}--dlq`,
+      queueName: this.props.name,
       retentionPeriod: Duration.days(14),
       encryption: this.props.encryption
         ? aws_sqs.QueueEncryption.KMS
@@ -103,11 +102,16 @@ export class DeadLetterQueue extends Construct {
       enforceSSL: true,
       visibilityTimeout: Duration.seconds(30),
     });
+
+    // === Configuration of the Queue Processor ===
+    // Grant the lambda function permissions to read from the queue
+    this.cdk.queue.grantConsumeMessages(this.cdk.queueProcessor);
+    // Add the DLQ URL to the lambda function environment variables
+    this.cdk.queueProcessor.addEnvironment("DLQ_URL", this.cdk.queue.queueUrl);
   }
 
   private setupAlarm() {
-    if (!this.props.disableAlarm) return;
-
+    if (!this.props.enableAlarm) return;
     this.cdk.alarm = new aws_cloudwatch.Alarm(this, "alarm", {
       alarmName: `${this.props.name}--dlq-alarm`,
       alarmDescription: `Alarm for ${this.props.name} dead letter queue`,
@@ -116,5 +120,19 @@ export class DeadLetterQueue extends Construct {
       evaluationPeriods: 1,
       treatMissingData: aws_cloudwatch.TreatMissingData.NOT_BREACHING,
     });
+  }
+
+  private silenceCdkNag() {
+    // this.cdk.queue.node.applyAspect({
+    //   visit(node: Construct) {
+    //     if (node.node.metadata.length) {
+    //       node.node.metadata.forEach((meta) => {
+    //         if (meta.type === "cdk-nag") {
+    //           node.node.metadata.splice(node.node.metadata.indexOf(meta), 1);
+    //         }
+    //       });
+    //     }
+    //   },
+    // });
   }
 }
