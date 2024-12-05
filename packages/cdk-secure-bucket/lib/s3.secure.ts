@@ -37,8 +37,10 @@ export interface SecureStoreProps
    *
    * It is often the case that you want to make sure that applications running
    * inside a VPC have access only to specific S3 buckets.
+   *
+   * @experimental
    */
-  vpc: aws_ec2.IVpc;
+  vpc?: aws_ec2.IVpc;
 }
 
 const defaultProps = {
