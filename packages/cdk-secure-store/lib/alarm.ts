@@ -11,10 +11,10 @@ import { SecureStore } from "./store";
 
 export interface SecureStoreAlarmsProps {
   /**
-   * The SNS topic to send DevOps notifications to. The SNS topic must be
+   * The SNS topic to send Alarm notifications to. The SNS topic must be
    * created in the same account and region as the DynamoDB table.
    */
-  devOpsTopicArn?: string;
+  alertsTopic?: string;
   /**
    * Enable System Error Alarm
    *
@@ -88,11 +88,11 @@ export class SecureStoreAlarms extends Construct {
 
     this.cdk.table = scope.cdk.table;
 
-    if (this.props.devOpsTopicArn)
+    if (this.props.alertsTopic)
       this.cdk.topic = aws_sns.Topic.fromTopicArn(
         this,
         "DevOpsTopic",
-        this.props.devOpsTopicArn,
+        this.props.alertsTopic,
       );
 
     // ==================================

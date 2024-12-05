@@ -46,7 +46,7 @@ describe("handler", () => {
     mockLambdaSend.mockResolvedValueOnce({});
     mockSqsSend.mockResolvedValueOnce({});
 
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
     const { handler } = require(path.join(__dirname, "../../lib/dlq/handler"));
 
     await handler();

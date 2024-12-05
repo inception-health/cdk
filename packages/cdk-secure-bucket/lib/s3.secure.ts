@@ -1,4 +1,4 @@
-import { aws_kms, aws_s3 } from "aws-cdk-lib";
+import { aws_kms, aws_s3, aws_ec2 } from "aws-cdk-lib";
 import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 
@@ -31,6 +31,16 @@ export interface SecureStoreProps
    *@defaultValue RemovalPolicy.RETAIN
    */
   removalPolicy?: cdk.RemovalPolicy;
+
+  /**
+   * The VPC to associate with the bucket.
+   *
+   * It is often the case that you want to make sure that applications running
+   * inside a VPC have access only to specific S3 buckets.
+   *
+   * @experimental
+   */
+  vpc?: aws_ec2.IVpc;
 }
 
 const defaultProps = {
@@ -101,21 +111,6 @@ export class SecureBucket extends aws_s3.Bucket {
       // the s3-bucket-versioning-enabled managed AWS Config rule.
       versioned: true,
 
-      // Step 5 - Cross-region replication
-      // TODO: Consider Amazon S3 cross-region replication
-
-      // Step 6 - VPC endpoints for Amazon S3 access
-      //
-      // TODO: Consider VPC endpoints for Amazon S3 access VPC endpoints for
-      // Amazon S3 provide multiple ways to control access to your Amazon S3
-      // data:
-      // - You can control the requests, users, or groups that are allowed
-      //   through a specific VPC endpoint.
-      // - You can control which VPCs or VPC endpoints have access to your S3
-      //   buckets by using S3 bucket policies.
-      // - You can help prevent data exfiltration by using a VPC that does not
-      //   have an internet gateway.
-
       // ================================================
       // Monitoring and Auditing Best Practices
       // ================================================
@@ -151,6 +146,24 @@ export class SecureBucket extends aws_s3.Bucket {
     // Step 6 - Consider using Amazon Macie with Amazon S3
 
     // Step 7 - Monitor AWS security advisories
+
+    // ================================================
+    // Preventative Security Best Practices
+    // ================================================
+
+    // Step 8 - Cross-region replication
+
+    // Step 6 - VPC endpoints for Amazon S3 access
+    //
+    // TODO: Consider VPC endpoints for Amazon S3 access VPC endpoints for
+    // Amazon S3 provide multiple ways to control access to your Amazon S3
+    // data:
+    // - You can control the requests, users, or groups that are allowed
+    //   through a specific VPC endpoint.
+    // - You can control which VPCs or VPC endpoints have access to your S3
+    //   buckets by using S3 bucket policies.
+    // - You can help prevent data exfiltration by using a VPC that does not
+    //   have an internet gateway.
 
     // ================================================
     // Props
