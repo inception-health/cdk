@@ -34,19 +34,19 @@ The `@inception-health/cdk-lambda` package simplifies AWS Lambda management by p
 To start using this repository, run the following command:
 
 ```bash
-npm install @inception-health/cdk
+npm install @inception-health/cdk-secure-store @inception-health/cdk-lambda @inception-health/cdk-secure-bucket
 ```
 
 If you use `yarn`, you can also run the command:
 
 ```bash
-yarn add @inception-health/cdk
+yarn add @inception-health/cdk-secure-store @inception-health/cdk-lambda @inception-health/cdk-secure-bucket
 ```
 
 If you use `pnpm`, you can also run the command:
 
 ```bash
-pnpm install @inception-health/cdk
+pnpm install @inception-health/cdk-secure-store @inception-health/cdk-lambda @inception-health/cdk-secure-bucket
 ```
 
 ## What is CDK
