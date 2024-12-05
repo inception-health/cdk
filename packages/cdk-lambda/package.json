@@ -37,7 +37,7 @@
     "aws-cdk-lib": "2.171.1",
     "cdk-nag": "2.34.9",
     "constructs": "10.4.2",
-    "esbuild": "0.20.0",
+    "esbuild": "0.24.0",
     "esbuild-jest": "0.5.0",
     "eslint-config-cdk-inception": "workspace:*",
     "jest": "29.7.0",
