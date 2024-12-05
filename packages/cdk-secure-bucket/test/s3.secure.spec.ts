@@ -1,8 +1,9 @@
 import * as crypto from "crypto";
 
-import { Stack } from "aws-cdk-lib";
+import { Stack, App } from "aws-cdk-lib";
 import * as cdk from "aws-cdk-lib";
-import { Match, Template } from "aws-cdk-lib/assertions";
+import { Match, Template, Annotations } from "aws-cdk-lib/assertions";
+import { HIPAASecurityChecks } from "cdk-nag";
 
 import { LifecycleMode } from "../lib/lifecycle";
 import { SecureBucket } from "../lib/s3.secure";
@@ -16,6 +17,32 @@ describe("Secure S3 Store", () => {
 
     // THEN
     expect(Template.fromStack(stack)).toMatchSnapshot();
+  });
+
+  it.skip("should pass cdk-nag HIPAASecurityChecks configuration", async () => {
+    // GIVEN
+    const app = new App();
+    const stack = new Stack(app);
+    cdk.Aspects.of(stack).add(new HIPAASecurityChecks({ verbose: true }));
+    const kmsArn = "arn:aws:kms:us-east-1:123454:key/general";
+
+    // WHEN
+    new SecureBucket(stack, "test-secure-store", { encryptionKey: kmsArn });
+
+    app.synth();
+
+    // THEN
+    const errors = Annotations.fromStack(stack).findError(
+      "*",
+      Match.stringLikeRegexp("HIPAA.*"),
+    );
+    expect(errors).toHaveLength(0);
+
+    const warnings = Annotations.fromStack(stack).findWarning(
+      "*",
+      Match.stringLikeRegexp("HIPAA.*"),
+    );
+    expect(warnings).toHaveLength(0);
   });
 
   it("should allow configuration of the bucket name", async () => {

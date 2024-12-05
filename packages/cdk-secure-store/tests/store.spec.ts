@@ -5,8 +5,11 @@ import {
   aws_dynamodb,
   CfnElement,
   aws_iam,
+  Aspects,
+  aws_sns,
 } from "aws-cdk-lib";
-import { Match, Template } from "aws-cdk-lib/assertions";
+import { Match, Template, Annotations } from "aws-cdk-lib/assertions";
+import { HIPAASecurityChecks } from "cdk-nag";
 
 import { SecureStore } from "../lib/store";
 
@@ -173,11 +176,11 @@ describe("Secure Store", () => {
       const store = new SecureStore(stack, "MySecureStore", {
         tableName,
         encryptionKey: encryptionKey,
-        devOpsTopicArn: devOpsTopicArn,
+        alertsTopic: devOpsTopicArn,
       });
 
       // Then
-      expect(store.components.devops).toBeDefined();
+      expect(store.components.notifications).toBeDefined();
       Template.fromStack(stack).resourceCountIs("AWS::Events::Rule", 1);
     });
 
@@ -270,7 +273,7 @@ describe("Secure Store", () => {
       expect(() => {
         new SecureStore(stack, "MySecureStore", {
           tableName,
-          devOpsTopicArn: devOpsTopicArn,
+          alertsTopic: devOpsTopicArn,
           // WHEN
           encryptionKey: undefined as any,
         });
@@ -287,11 +290,53 @@ describe("Secure Store", () => {
         new SecureStore(stack, "MySecureStore", {
           tableName,
           encryptionKey: encryptionKey,
-          devOpsTopicArn: devOpsTopicArn,
+          alertsTopic: devOpsTopicArn,
           // WHEN
           partitionKey: undefined as any,
         });
       }).toThrowError("The property partitionKey is required.");
+    });
+  });
+
+  describe("HIPAA Compliance", () => {
+    it("should pass cdk-nag HIPAASecurityChecks configuration", async () => {
+      // GIVEN
+      const app = new App();
+      const stack = new Stack(app, "TestStack", {
+        env: {
+          region: "us-east-1",
+          account: "123456789012",
+        },
+      });
+      Aspects.of(stack).add(new HIPAASecurityChecks({ verbose: true }));
+
+      // WHEN
+      const topic = new aws_sns.Topic(stack, "MyTopic", {
+        enforceSSL: true,
+        masterKey: encryptionKey,
+        topicName: "unit-test-topic",
+      });
+
+      new SecureStore(stack, "MySecureStore", {
+        tableName,
+        encryptionKey: encryptionKey,
+        alertsTopic: topic.topicArn,
+      });
+
+      app.synth();
+
+      // THEN
+      const errors = Annotations.fromStack(stack).findError(
+        "*",
+        Match.stringLikeRegexp("HIPAA.*"),
+      );
+      expect(errors).toHaveLength(0);
+
+      const warnings = Annotations.fromStack(stack).findWarning(
+        "*",
+        Match.stringLikeRegexp("HIPAA.*"),
+      );
+      expect(warnings).toHaveLength(0);
     });
   });
 
