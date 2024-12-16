@@ -23,7 +23,7 @@
     "@changesets/changelog-github": "0.5.0",
     "@changesets/cli": "2.27.1",
     "@inception-health/cdk-tsconfig": "workspace:*",
-    "eslint": "8.57.1",
+    "eslint": "9.17.0",
     "eslint-config-cdk-inception": "workspace:*",
     "prettier": "3.4.1",
     "syncpack": "13.0.0",
