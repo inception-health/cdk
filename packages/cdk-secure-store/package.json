@@ -28,7 +28,7 @@
     "@inception-health/cdk-tsconfig": "workspace:*",
     "@types/jest": "29.5.14",
     "cdk-nag": "2.34.9",
-    "@types/node": "20.11.19",
+    "@types/node": "22.10.5",
     "aws-cdk": "2.171.1",
     "aws-cdk-lib": "2.171.1",
     "constructs": "10.4.2",
