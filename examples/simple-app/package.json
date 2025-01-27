@@ -21,7 +21,7 @@
   "devDependencies": {
     "@inception-health/cdk-tsconfig": "workspace:*",
     "@types/node": "20.11.19",
-    "aws-cdk": "2.171.1",
+    "aws-cdk": "2.177.0",
     "cdk": "2.171.1",
     "dotenv": "16.4.4",
     "eslint-config-cdk-inception": "workspace:*",
