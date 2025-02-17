@@ -64,8 +64,8 @@ importers:
         specifier: 20.11.19
         version: 20.11.19
       aws-cdk:
-        specifier: 2.171.1
-        version: 2.171.1
+        specifier: 2.178.2
+        version: 2.178.2
       cdk:
         specifier: 2.171.1
         version: 2.171.1
@@ -103,8 +103,8 @@ importers:
         specifier: 20.11.19
         version: 20.11.19
       aws-cdk:
-        specifier: 2.171.1
-        version: 2.171.1
+        specifier: 2.178.2
+        version: 2.178.2
       aws-cdk-lib:
         specifier: 2.171.1
         version: 2.171.1(constructs@10.4.2)
@@ -154,8 +154,8 @@ importers:
         specifier: 20.11.19
         version: 20.11.19
       aws-cdk:
-        specifier: 2.171.1
-        version: 2.171.1
+        specifier: 2.178.2
+        version: 2.178.2
       aws-cdk-lib:
         specifier: 2.171.1
         version: 2.171.1(constructs@10.4.2)
@@ -203,8 +203,8 @@ importers:
         specifier: 20.11.19
         version: 20.11.19
       aws-cdk:
-        specifier: 2.171.1
-        version: 2.171.1
+        specifier: 2.178.2
+        version: 2.178.2
       aws-cdk-lib:
         specifier: 2.171.1
         version: 2.171.1(constructs@10.4.2)
@@ -1658,6 +1658,11 @@ packages:
 
   aws-cdk@2.171.1:
     resolution: {integrity: sha512-IWENyT4F5UcLr1szLsbipUdjIHn8FD3d/RvaIvhs2+qCamkfEV5mqv/ChMvRJ8H2jebhIZ2iz74or9O5Ismp+Q==}
+    engines: {node: '>= 14.15.0'}
+    hasBin: true
+
+  aws-cdk@2.178.2:
+    resolution: {integrity: sha512-ojMCMnBGinvDUD6+BOOlUOB9pjsYXoQdFVbf4bvi3dy3nwn557r0j6qDUcJMeikzPJ6YWzfAdL0fYxBZg4xcOg==}
     engines: {node: '>= 14.15.0'}
     hasBin: true
 
@@ -6430,6 +6435,10 @@ snapshots:
       constructs: 10.4.2
 
   aws-cdk@2.171.1:
+    optionalDependencies:
+      fsevents: 2.3.2
+
+  aws-cdk@2.178.2:
     optionalDependencies:
       fsevents: 2.3.2
 
